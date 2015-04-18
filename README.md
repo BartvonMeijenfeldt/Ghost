@@ -25,6 +25,10 @@ After click on play: ![GitHub Logo](/Sketches/ChoosePlayer.jpg)
 After clicking on New player 
 In game: ![GitHub Logo](/Sketches/CreateAccount.jpg)
 
+In game: ![GitHub Logo](/Sketches/Game.jpg)
+
+
+
 Menu: ![GitHub Logo](/Sketches/Menu.jpg)
 
 
