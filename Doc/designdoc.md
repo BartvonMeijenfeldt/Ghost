@@ -71,6 +71,7 @@ Classes
 	with methods
 
 **Dictionary (with a string as parameter)**
+
    filter
        this method takes a string as input and filters the word list using this string. Because loading the 	             dictionary takes quite a bit of time, this method should not destroy the base dictionary and thus 			       allows it to be re-used.
 		
