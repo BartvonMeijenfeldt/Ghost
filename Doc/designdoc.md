@@ -72,7 +72,7 @@ Classes
 
 Dictionary (with a string as parameter)
 	filter
-		this method takes a string as input and filters the word list using this string. Because loading the 			     	dictionary takes quite a bit of time, this method should not destroy the base dictionary and thus allows it 		to be re-used.
+		this method takes a string as input and filters the word list using this string. Because loading the 			dictionary takes quite a bit of time, this method should not destroy the base dictionary and thus 			allows it to be re-used.
 		
 	count
 		this method returns the length of the words remaining in the filtered list.
@@ -85,8 +85,7 @@ Dictionary (with a string as parameter)
 		
 Game(with a Dictionary as parameter)
 	guess
-		this methods takes a string as input, representing the ltter that the current player has guessed. It uses the 
-		Dictionary instance to decide.
+		this methods takes a string as input, representing the ltter that the current player has guessed. It 			uses the Dictionary instance to decide.
 		
 	turn
 		this method returns a boolean indicating which player is up for guessing.
@@ -95,5 +94,5 @@ Game(with a Dictionary as parameter)
 		this method returns a boolean indicating if the game has ended.
 		
 	winner
-		this method returns a boolean indicating which player has won the game. This method can obviously only make 			sense if ended return true.
+		this method returns a boolean indicating which player has won the game. This method can obviously only 		make sense if ended return true.
 		
