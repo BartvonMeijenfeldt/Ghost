@@ -22,8 +22,9 @@ Startscreen:
 
 After click on play: ![GitHub Logo](/Sketches/ChoosePlayer.jpg)
 
-After clicking on New player 
-In game: ![GitHub Logo](/Sketches/CreateAccount.jpg)
+After clicking on New player: ![GitHub Logo](/Sketches/CreateAccount.jpg)
+
+After clicking on Existing player: ![GitHub Logo](/Sketches/Existing players.jpg)
 
 In game: ![GitHub Logo](/Sketches/Game.jpg)
 
