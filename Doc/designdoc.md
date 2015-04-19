@@ -72,29 +72,29 @@ Classes
 
 **Dictionary (with a string as parameter)**
 
-   filter
+   filter:
        this method takes a string as input and filters the word list using this string. Because loading the 	             dictionary takes quite a bit of time, this method should not destroy the base dictionary and thus 			       allows it to be re-used.
 		
-   count
+   count:
       this method returns the length of the words remaining in the filtered list.
 
-   result
+   result:
        this method returns the single remaining word in the list. Obviously, this method can only be called 		       if count returns the number 1.
 
-   reset
+   reset:
        to remove the filter and re-start with the original dictionary.
 		
 **Game(with a Dictionary as parameter)**
 
-   guess
+   guess:
        this methods takes a string as input, representing the ltter that the current player has guessed. It 		       uses the Dictionary instance to decide.
 		
-   turn
+   turn:
        this method returns a boolean indicating which player is up for guessing.
 	
-   ended
+   ended:
        this method returns a boolean indicating if the game has ended.
 		
-   winner
+   winner:
        this method returns a boolean indicating which player has won the game. This method can obviously only 		       make sense if ended return true.
 		
