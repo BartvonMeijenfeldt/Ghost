@@ -70,7 +70,7 @@ Listview to show all players in the High Score.
 Classes
 	with methods
 
-Dictionary (with a string as parameter)
+**Dictionary (with a string as parameter)**
    filter
        this method takes a string as input and filters the word list using this string. Because loading the 	             dictionary takes quite a bit of time, this method should not destroy the base dictionary and thus 			       allows it to be re-used.
 		
@@ -83,7 +83,8 @@ Dictionary (with a string as parameter)
    reset
        to remove the filter and re-start with the original dictionary.
 		
-Game(with a Dictionary as parameter)
+**Game(with a Dictionary as parameter)**
+
    guess
        this methods takes a string as input, representing the ltter that the current player has guessed. It 		       uses the Dictionary instance to decide.
 		
