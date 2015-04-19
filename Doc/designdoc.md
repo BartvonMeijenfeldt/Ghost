@@ -29,7 +29,7 @@ with pop-up menu:
 
 /PLAY/GAME STARTED/GAME ENDED/HIGH SCORE
 
-![](https://github.com/BartvonMeijenfeldt/Ghost/blob/master/Sketches/Hi-scoresAfterGame.jpg)
+![](https://github.com/BartvonMeijenfeldt/Ghost/blob/master/Sketches/Hi-ScoresAfterGame.jpg)
 
 /SETTINGS
 
