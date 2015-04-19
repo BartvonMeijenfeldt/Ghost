@@ -97,4 +97,7 @@ Classes
 		
    winner:
        this method returns a boolean indicating which player has won the game. This method can obviously only 		       make sense if ended return true.
+       
+       
+   Frameworks: -Storing data after closing/resuming -Switching screens and giving data to next screen -Loading in 	dictionaries in a smart way -Menu Bar -Choosing a random word
 		
