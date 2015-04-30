@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    tools:context=".GameActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Player 1's turn"
+        android:id="@+id/turn_textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/current_word_textView"
+        android:layout_alignStart="@+id/current_word_textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Current word:"
+        android:id="@+id/current_word_textView"
+        android:layout_below="@+id/turn_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=""
+        android:id="@+id/word_textView"
+        android:layout_below="@+id/current_word_textView"
+        android:layout_alignRight="@+id/current_word_textView"
+        android:layout_alignEnd="@+id/current_word_textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Choose first letter:"
+        android:id="@+id/next_letter_textView"
+        android:layout_marginTop="46dp"
+        android:layout_below="@+id/word_textView"
+        android:layout_alignLeft="@+id/letter_editText"
+        android:layout_alignStart="@+id/letter_editText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/letter_editText"
+        android:layout_below="@+id/next_letter_textView"
+        android:layout_alignLeft="@+id/turn_textView"
+        android:layout_alignStart="@+id/turn_textView"
+        android:layout_alignRight="@+id/turn_textView"
+        android:layout_alignEnd="@+id/turn_textView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:id="@+id/ok_button"
+        android:layout_alignBottom="@+id/letter_editText"
+        android:layout_toRightOf="@+id/letter_editText"
+        android:layout_toEndOf="@+id/letter_editText"
+        android:onClick="click"/>
+
+
+</RelativeLayout>
