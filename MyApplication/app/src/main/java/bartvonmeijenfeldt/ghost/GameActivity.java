@@ -1,5 +1,6 @@
 package bartvonmeijenfeldt.ghost;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 public class GameActivity extends ActionBarActivity {
 
+    String name_player1;
+    String name_player2;
     private TextView outputTextView;
     private TextView nextLetterTextView;
     private TextView turnTextView;
@@ -29,6 +32,8 @@ public class GameActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         outputTextView = (TextView) findViewById(R.id.word_textView);
@@ -51,6 +56,13 @@ public class GameActivity extends ActionBarActivity {
         }
 
         game = new Game(dict);
+
+
+        Intent names = getIntent();
+        name_player1 = names.getExtras().getString("player1");
+        name_player2 = names.getExtras().getString("player2");
+        turnTextView.setText(name_player1 + ", choose a letter!");
+
 
     }
 
@@ -82,8 +94,11 @@ public class GameActivity extends ActionBarActivity {
 
     public void click(View view) {
 
+
+
         if(!game.ended()) {
 
+            // conditions for input
             String input = letterEditText.getText().toString().toLowerCase();
             if (input.length() != 1) {
                 Toast.makeText(this, "You did not enter one letter", Toast.LENGTH_SHORT).show();
@@ -97,27 +112,27 @@ public class GameActivity extends ActionBarActivity {
                 return;
             }
 
+            //update game
             game.guess(letter);
 
             if (game.ended()) {
                 okButton.setText("GG, RE?");
                 String word = game.word;
-
-
-
-
                 if (game.winner()) {
-                    turnTextView.setText("Player 2 won");
+                    turnTextView.setText(name_player2 +" won");
                 } else {
-                    turnTextView.setText("Player 1 won");
+                    turnTextView.setText(name_player1 + " won");
                 }
                 if (dict.isWord(word)) {
                     turnTextView.append(" (word)");
                 }
-            } else if (game.turn()) {
-                turnTextView.setText("Player 2's turn");
+
+            }
+
+            else if (!game.turn()) {
+                turnTextView.setText(name_player1 + ", choose a letter!");
             } else {
-                turnTextView.setText("Player 1's turn");
+                turnTextView.setText(name_player2 + ", choose a letter!");
             }
 
             nextLetterTextView.setText("Next letter:");
@@ -136,7 +151,7 @@ public class GameActivity extends ActionBarActivity {
             dict.reset();
             game = new Game(dict);
             outputTextView.setText("");
-            turnTextView.setText("Player 1's Turn");
+            turnTextView.setText(name_player1 + ", choose a letter!");
             nextLetterTextView.setText("Choose first letter:");
             firstTurn = true;
         }

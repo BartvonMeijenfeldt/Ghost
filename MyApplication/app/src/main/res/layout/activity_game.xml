@@ -6,7 +6,8 @@
     android:paddingRight="20dp"
     android:paddingTop="20dp"
     android:paddingBottom="20dp"
-    tools:context=".GameActivity">
+    tools:context=".GameActivity"
+    android:background="#ffcfe4ff">
 
     <TextView
         android:layout_width="wrap_content"
@@ -67,7 +68,8 @@
         android:layout_alignBottom="@+id/letter_editText"
         android:layout_toRightOf="@+id/letter_editText"
         android:layout_toEndOf="@+id/letter_editText"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:background="#ff90a8ff" />
 
 
 </RelativeLayout>

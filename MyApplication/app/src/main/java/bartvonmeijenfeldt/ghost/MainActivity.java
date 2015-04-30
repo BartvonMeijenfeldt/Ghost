@@ -20,7 +20,7 @@ public class MainActivity extends ActionBarActivity {
         Intent getNameScreenIntent = new Intent(this,
                 ChoosePlayersActivity.class);
 
-        getNameScreenIntent.putExtra("callingActivity", "MainActivity");
+        //getNameScreenIntent.putExtra("callingActivity", "MainActivity");
         startActivity(getNameScreenIntent);
     }
 }

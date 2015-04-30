@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffcfe4ff">
@@ -8,9 +8,56 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Player"
-        android:id="@+id/player_textView"
-        android:layout_gravity="center_horizontal"
-        android:textSize="50dp"/>
-</LinearLayout>
+        android:text="Player 1"
+        android:id="@+id/player1_textView"
+        android:textSize="40dp"
+        android:paddingTop="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Player 2"
+        android:id="@+id/player2_textView2"
+        android:textSize="40dp"
+        android:paddingTop="25dp"
+        android:layout_below="@+id/player1_textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:id="@+id/player1_editText"
+        android:textSize="30dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/player1_textView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:id="@+id/player2_editText"
+        android:textSize="30dp"
+        android:layout_marginTop="105dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/player1_textView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start!"
+        android:id="@+id/button"
+        android:textSize="50sp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ff90a8ff"
+        android:onClick="Start"/>
+
+</RelativeLayout>
 
