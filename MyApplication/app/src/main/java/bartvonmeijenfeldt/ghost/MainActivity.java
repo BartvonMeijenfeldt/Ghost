@@ -20,7 +20,16 @@ public class MainActivity extends ActionBarActivity {
         Intent getNameScreenIntent = new Intent(this,
                 ChoosePlayersActivity.class);
 
-        //getNameScreenIntent.putExtra("callingActivity", "MainActivity");
         startActivity(getNameScreenIntent);
+    }
+
+    public void activity_hi_scores(View view) {
+        Intent hiScores = new Intent(this, HiScoreActivity.class);
+        hiScores.putExtra("callingActivity", "MainActivity");
+        startActivity(hiScores);
+    }
+
+    @Override
+    public void onBackPressed(){
     }
 }

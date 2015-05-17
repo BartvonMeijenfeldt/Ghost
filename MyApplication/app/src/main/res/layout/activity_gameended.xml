@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffcfe4ff">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="10dp"
+        android:text="Player 1 has won"
+        android:textSize="45sp"
+        android:id="@+id/winner_textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="10dp"
+        android:text="Player 2 made a word, which could never form an existing word: "
+        android:textSize="30dp"
+        android:id="@+id/reason_textView"
+        android:layout_below="@+id/winner_textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pantow"
+        android:textSize="35dp"
+        android:id="@+id/word_textView"
+        android:layout_below="@+id/reason_textView"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffff3234" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hi-Scores"
+        android:textSize="45dp"
+        android:padding="10dp"
+        android:id="@+id/hiscores_button"
+        android:background="#ff90a8ff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignLeft="@+id/rematch_button"
+        android:layout_alignStart="@+id/rematch_button"
+        android:layout_alignRight="@+id/rematch_button"
+        android:layout_alignEnd="@+id/rematch_button"
+        android:onClick="activity_hi_scores"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rematch!"
+        android:textSize="55dp"
+        android:padding="10dp"
+        android:id="@+id/rematch_button"
+        android:background="#ff90a8ff"
+        android:layout_above="@+id/hiscores_button"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="activity_rematch"/>
+
+</RelativeLayout>

@@ -19,7 +19,8 @@
 
         <activity
             android:name=".GameActivity"
-            android:label="Ghost" >
+            android:label="Ghost"
+            android:windowSoftInputMode="stateVisible">
 
         </activity>
 
@@ -28,6 +29,28 @@
             android:label="Ghost" >
 
         </activity>
+
+        <activity
+            android:name=".ChooseExistingPlayerActivity"
+            android:label="Ghost" >
+
+         </activity>
+
+        <activity
+            android:name=".GameEndedActivity"
+            android:label="Ghost" >
+
+            </activity>
+
+        <activity
+            android:name=".HiScoreActivity"
+            android:label="Ghost" >
+
+        </activity>
+
+
+
+
 
 
     </application>

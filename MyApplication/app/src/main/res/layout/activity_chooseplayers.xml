@@ -9,19 +9,21 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Player 1"
+        android:layout_margin="10dp"
         android:id="@+id/player1_textView"
         android:textSize="40dp"
-        android:paddingTop="25sp"/>
+        android:paddingTop="13sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Player 2"
+        android:layout_margin="10dp"
         android:id="@+id/player2_textView2"
         android:textSize="40dp"
-        android:paddingTop="25dp"
-        android:layout_below="@+id/player1_textView"
+        android:paddingTop="1dp"
+        android:layout_below="@+id/existing_player1_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -30,34 +32,159 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:ems="4"
         android:id="@+id/player1_editText"
         android:textSize="30dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/player1_textView" />
+        android:layout_toRightOf="@+id/player1_textView"
+
+        />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="4"
+        android:inputType="textCapWords"
         android:id="@+id/player2_editText"
         android:textSize="30dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/player1_textView" />
+        android:layout_marginTop="9dp"
+        android:layout_toRightOf="@+id/player2_textView2"
+        android:layout_below="@id/existing_player1_button"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Existing Players"
+        android:id="@+id/existing_player1_button"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:layout_below="@+id/player1_editText"
+        android:layout_alignLeft="@+id/player1_editText"
+        android:layout_alignStart="@+id/player1_editText"
+        android:background="#ff90a8ff"
+        android:onClick="ExistingPlayers"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Existing Players"
+        android:id="@+id/existing_player2_button"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:layout_below="@+id/player2_editText"
+        android:layout_alignLeft="@+id/player1_editText"
+        android:layout_alignStart="@+id/player1_editText"
+        android:background="#ff90a8ff"
+        android:onClick="ExistingPlayers"/>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start!"
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         android:textSize="50sp"
+        android:padding="10dp"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#ff90a8ff"
         android:onClick="Start"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Language"
+        android:layout_margin="5dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="25dp"
+        android:id="@+id/language_textView"
+        android:layout_below="@+id/existing_player2_button" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="English"
+        android:layout_margin="3dp"
+        android:layout_marginLeft="0dp"
+        android:id="@+id/english_radioButton"
+        android:layout_below="@+id/language_textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="englishClick"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dutch"
+        android:id="@+id/dutch_radioButton"
+        android:layout_margin="3dp"
+        android:layout_below="@id/language_textView"
+        android:layout_toRightOf="@+id/english_radioButton"
+        android:onClick="dutchClick"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Letters chosen"
+        android:textSize="25dp"
+        android:id="@+id/random_letter_textView"
+        android:layout_alignTop="@+id/language_textView"
+        android:layout_alignRight="@+id/existing_player2_button"
+        android:layout_alignEnd="@+id/existing_player2_button" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:id="@+id/zero_radioButton"
+        android:layout_alignTop="@+id/dutch_radioButton"
+        android:layout_alignLeft="@+id/random_letter_textView"
+        android:layout_alignStart="@+id/random_letter_textView"
+        android:onClick="zeroClick"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/one_radioButton"
+        android:layout_alignTop="@+id/zero_radioButton"
+        android:layout_toRightOf="@+id/zero_radioButton"
+        android:layout_toEndOf="@+id/zero_radioButton"
+        android:onClick="oneClick"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:id="@+id/two_radioButton"
+        android:layout_alignTop="@+id/one_radioButton"
+        android:layout_toRightOf="@+id/one_radioButton"
+        android:layout_toEndOf="@+id/one_radioButton"
+        android:onClick="twoClick"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3"
+        android:id="@+id/three_radioButton"
+        android:layout_alignTop="@+id/two_radioButton"
+        android:layout_alignRight="@+id/random_letter_textView"
+        android:layout_alignEnd="@+id/random_letter_textView"
+        android:onClick="threeClick"/>
+
 
 </RelativeLayout>
 

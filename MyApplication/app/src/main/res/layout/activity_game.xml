@@ -1,75 +1,82 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:orientation="vertical"
+    android:gravity="center|top"
     tools:context=".GameActivity"
     android:background="#ffcfe4ff">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="20dp"
         android:text="Player 1's turn"
         android:id="@+id/turn_textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/current_word_textView"
-        android:layout_alignStart="@+id/current_word_textView" />
+        android:textStyle="bold"
+        />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="15dp"
         android:text="Current word:"
         android:id="@+id/current_word_textView"
-        android:layout_below="@+id/turn_textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
+/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=""
+        android:padding="15dp"
+        android:text="(No word yet)"
         android:id="@+id/word_textView"
-        android:layout_below="@+id/current_word_textView"
-        android:layout_alignRight="@+id/current_word_textView"
-        android:layout_alignEnd="@+id/current_word_textView" />
+        android:textColor="#ffff3234" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Choose first letter:"
-        android:id="@+id/next_letter_textView"
-        android:layout_marginTop="46dp"
-        android:layout_below="@+id/word_textView"
-        android:layout_alignLeft="@+id/letter_editText"
-        android:layout_alignStart="@+id/letter_editText" />
+        android:padding="15dp"
+        android:text="English dictionary in use"
+        android:id="@+id/dictionary_textView"
+        android:textColor="#ff707070" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/letter_editText"
-        android:layout_below="@+id/next_letter_textView"
-        android:layout_alignLeft="@+id/turn_textView"
-        android:layout_alignStart="@+id/turn_textView"
-        android:layout_alignRight="@+id/turn_textView"
-        android:layout_alignEnd="@+id/turn_textView" />
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:maxLength="1"
+        android:ems="1"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
         android:text="Ok"
         android:id="@+id/ok_button"
-        android:layout_alignBottom="@+id/letter_editText"
-        android:layout_toRightOf="@+id/letter_editText"
-        android:layout_toEndOf="@+id/letter_editText"
         android:onClick="click"
         android:background="#ff90a8ff" />
 
+    </LinearLayout>
 
-</RelativeLayout>
+
+</LinearLayout>

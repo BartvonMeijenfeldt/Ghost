@@ -62,4 +62,22 @@ public class Game {
         return player;
     }
 
+    String word_random;
+    String updateRandomLetters(Integer letters) {
+        do {
+            word_random = dict.getRandomWord();
+        } while (word_random.length() < letters + 1);
+        String returnWord = "";
+        for(int i = 0; i < letters; i++) {
+            this.guess(word_random.charAt(i));
+
+            if (i == 0) {
+                returnWord = (returnWord + word_random.charAt(i)).toUpperCase();
+            } else {
+                returnWord = returnWord + word_random.charAt(i);
+            }
+        }
+        return returnWord;
+    }
+
 }

@@ -79,4 +79,15 @@ public class Dictionary {
 
     }
 
+    public String getRandomWord() {
+        int words = dictionary_filtered.size();
+        int word_chosen = (int) (Math.random() * words);
+
+        Iterator<String> iterator = dictionary_filtered.iterator();
+        for (int i = 0; i < word_chosen; i++) {
+            iterator.next();
+        }
+        return iterator.next();
+    }
+
 }
