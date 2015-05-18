@@ -56,21 +56,21 @@ public class GameActivity extends ActionBarActivity {
 
         readDictionaryAndCreateGame();
         getPlayerNames();
-
         String word = preferenceSettings.getString("word", null);
         if (word != null) {
-            for(int i = 0; i < word.length(); i++) {
-                game.guess(word.charAt(i));
-            }
+            recreateSavedGame(word);
         }
-
-        preferenceEditor.remove("word");
-        preferenceEditor.commit();
-
         pickRandomLetters();
         setTextViewsOnCreate();
     }
 
+    private void recreateSavedGame(String word) {
+        for(int i = 0; i < word.length(); i++) {
+            game.guess(word.charAt(i));
+        }
+        preferenceEditor.remove("word");
+        preferenceEditor.commit();
+    }
 
 
     @Override
