@@ -30,15 +30,11 @@ public class GameActivity extends ActionBarActivity {
     private TextView dictionaryTextView;
     private TextView turnTextView;
     private EditText letterEditText;
-    Dictionary dict;
     Game game;
     SharedPreferences preferenceSettings;
     SharedPreferences.Editor preferenceEditor;
     Boolean dutch;
-    Set<String> user_names;
-    Set<String> user_names_returning;
-    String[] user_names_array;
-    Integer[] wins_array;
+    Set<String> user_names = new HashSet<>();
     String winner;
     String loser;
 
@@ -59,18 +55,13 @@ public class GameActivity extends ActionBarActivity {
         String word = preferenceSettings.getString("word", null);
         if (word != null) {
             recreateSavedGame(word);
+        } else {
+            pickRandomLetters();
         }
-        pickRandomLetters();
         setTextViewsOnCreate();
     }
 
-    private void recreateSavedGame(String word) {
-        for(int i = 0; i < word.length(); i++) {
-            game.guess(word.charAt(i));
-        }
-        preferenceEditor.remove("word");
-        preferenceEditor.commit();
-    }
+
 
 
     @Override
@@ -97,8 +88,8 @@ public class GameActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void click(View view) {
+
+    public void ok(View view) {
 
         String input = letterEditText.getText().toString().toLowerCase();
         if(errorCheckingInput(input)){
@@ -110,13 +101,7 @@ public class GameActivity extends ActionBarActivity {
         if (game.ended()) {
             getUserNames();
             setWinnerAndLoser();
-            if(user_names.size() == 0) {
-                updateEmptyUserNames();
-            }   else {
-                updateExistingUserNames();
-            }
             updateScoreWinner();
-            storeUserNames();
             createGameEndedActivity();
         }
         else {
@@ -141,83 +126,34 @@ public class GameActivity extends ActionBarActivity {
         GameEndedActivity.putExtra("winner", winner);
         GameEndedActivity.putExtra("loser", loser);
         GameEndedActivity.putExtra("word", capitalizeFirstLetterWord(game.word));
-        GameEndedActivity.putExtra("isWord", dict.isWord(game.word));
+        GameEndedActivity.putExtra("isWord", game.lossByMadeWord());
         startActivity(GameEndedActivity);
         finish();
     }
 
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void storeUserNames() {
-        for (int i = 0; i < user_names_array.length; i++) {
-            user_names_returning.add(user_names_array[i] + "\n" + String.valueOf(wins_array[i]));
+    private void updateScoreWinner() {
+
+        Set<String> user_names_returning = new HashSet<>();
+        Iterator user_names_iterator = user_names.iterator();
+
+        while(user_names_iterator.hasNext()) {
+            String tempEntry = (String) user_names_iterator.next();
+
+            String tempUserName = (tempEntry).split("\n")[0];
+            if(tempUserName.equals(winner)) {
+                Integer tempScore = Integer.parseInt(tempEntry.split("\n")[1]) + 1;
+                user_names_returning.add(tempUserName +"\n" + tempScore);
+            }   else {
+                user_names_returning.add(tempEntry);
+            }
         }
+
         preferenceEditor.putStringSet("names", user_names_returning);
         preferenceEditor.commit();
     }
 
-    private void updateScoreWinner() {
-        for (int i = 0; i < user_names_array.length; i++) {
-            if (winner.equals(user_names_array[i])) {
-                wins_array[i]++;
-                break;
-            }
-        }
-    }
-
-    private void updateEmptyUserNames() {
-        user_names_array = new String[2];
-        wins_array = new Integer[2];
-        user_names_array[0] = name_player1;
-        user_names_array[1] = name_player2;
-        wins_array[0] = 0;
-        wins_array[1] = 0;
-    }
-
-    private void updateExistingUserNames() {
-        user_names_returning = new HashSet<>();
-        user_names_array = new String[user_names.size()];
-        wins_array = new Integer[user_names.size()];
-        Iterator user_names_iterator = user_names.iterator();
-
-        boolean exist_player1 = false;
-        boolean exist_player2 = false;
-        int iterator = 0;
-
-        while(user_names_iterator.hasNext()) {
-            String[] temp = ((String) user_names_iterator.next()).split("\n");
-            user_names_array[iterator] = temp[0];
-            try {
-                wins_array[iterator] = Integer.parseInt(temp[1]);
-            } catch (NumberFormatException nfe) {
-                wins_array[iterator] = 0;
-            }
-
-            if(user_names_array[iterator].equals(name_player1)) {
-                exist_player1 = true;
-            }   else if(user_names_array[iterator].equals(name_player2)) {
-                exist_player2 = true;
-            }
-            iterator++;
-        }
-        //userNames.clear();
-
-        if (!exist_player1) {
-            if (name_player1.equals(winner)) {
-                user_names_returning.add(name_player1 +"\n1");
-            } else {
-                user_names_returning.add(name_player1 + "\n0");
-            }
-
-        }
-
-        if(!exist_player2) {
-            if (name_player2.equals(winner)) {
-                user_names_returning.add(name_player2 +"\n1");
-            } else {
-                user_names_returning.add(name_player2 + "\n0");
-            }
-        }
-    }
 
     private void setWinnerAndLoser() {
         if (!game.winner()) {
@@ -232,7 +168,6 @@ public class GameActivity extends ActionBarActivity {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void getUserNames() {
-        user_names = new HashSet<>();
         user_names = preferenceSettings.getStringSet("names", user_names);
     }
 
@@ -255,9 +190,9 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private void pickRandomLetters() {
-        int numberLetters = preferenceSettings.getInt("letters", 0);
-        if(numberLetters > 0) {
-            game.updateRandomLetters(numberLetters);
+        int numberOfLetters = preferenceSettings.getInt("numberOfLetters", 0);
+        if(numberOfLetters > 0) {
+            game.updateRandomLetters(numberOfLetters);
         }
     }
 
@@ -271,7 +206,7 @@ public class GameActivity extends ActionBarActivity {
             reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.english)));
         }
         String line;
-        dict = new Dictionary();
+        Dictionary dict = new Dictionary();
         try {
             while ((line = reader.readLine()) != null) {
                 dict.add(line);
@@ -314,11 +249,20 @@ public class GameActivity extends ActionBarActivity {
     public void onBackPressed() {
     }
 
+
     public void getPlayerNames() {
         Intent players = getIntent();
         name_player1 = players.getExtras().getString("player1");
         name_player2 = players.getExtras().getString("player2");
 
+    }
+
+    private void recreateSavedGame(String word) {
+        for(int i = 0; i < word.length(); i++) {
+            game.guess(word.charAt(i));
+        }
+        preferenceEditor.remove("word");
+        preferenceEditor.commit();
     }
 }
 
