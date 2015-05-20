@@ -52,9 +52,9 @@ public class HiScoreActivity extends ActionBarActivity {
     }
 
     private void orderUserNames() {
-        // keeps switching userNames and their scores if a userName higher up in the array
-        // has a lower score than the one below, stops if no userNames were switched for a
-        // iteration.
+        // keeps moving up the array and switching userNames and their scores if a userName higher
+        // up in the array has a lower score than the one below, stops if no userNames were switched
+        // for a iteration.
         int switches;
         do {
             int i = winsArray.length - 1;
