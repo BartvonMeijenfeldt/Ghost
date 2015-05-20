@@ -9,24 +9,16 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
-
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
 import android.widget.TextView;
-
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-
-/**
- * Created by startklaar on 13-5-2015.
- */
 public class ChooseExistingPlayerActivity extends ActionBarActivity {
 
     String player;
-    TextView player_textView;
+    TextView playerTextView;
     SharedPreferences preferenceSettings;
     SharedPreferences.Editor preferenceEditor;
 
@@ -38,39 +30,43 @@ public class ChooseExistingPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chooseexistingplayer);
 
-        player_textView = (TextView) findViewById(R.id.player_textView);
+        playerTextView = (TextView) findViewById(R.id.player_textView);
         player = getIntent().getExtras().getString("player");
-        player_textView.append(player);
+        playerTextView.append(player);
 
-        Set<String> user_names;
-        Set<String> error_user_names = new HashSet<String>();
-        error_user_names.add("No Existing\n0");
-        error_user_names.add("Players\n0");
+        Set<String> userNames;
+        Set<String> errorUserNames = new HashSet<>();
+        errorUserNames.add("No Existing\n0");
+        errorUserNames.add("Players\n0");
 
-        preferenceSettings = getSharedPreferences("user_names",Context.MODE_PRIVATE);
-        user_names = preferenceSettings.getStringSet("names", error_user_names);
-        String[] user_names_and_wins = new String[user_names.size()];
-        user_names.toArray(user_names_and_wins);
-        Integer[] wins_array = new Integer[user_names_and_wins.length];
+        preferenceSettings = getSharedPreferences("userNames", Context.MODE_PRIVATE);
+        userNames = preferenceSettings.getStringSet("names", errorUserNames);
+        String[] userNamesAndWins = new String[userNames.size()];
+        userNames.toArray(userNamesAndWins);
+        Integer[] winsArray = new Integer[userNamesAndWins.length];
 
-        for (int i = 0; i < user_names_and_wins.length; i++)
+        for (int i = 0; i < userNamesAndWins.length; i++)
         {
-            wins_array[i] = Integer.parseInt((user_names_and_wins[i]).split("\n")[1]);
+            try {
+                winsArray[i] = Integer.parseInt((userNamesAndWins[i]).split("\n")[1]);
+            }   catch (NumberFormatException nfe) {
+                winsArray[i] = 0;
+            }
         }
 
-        int switches = 0;
+        int switches;
         do {
-            int i = wins_array.length - 1;
+            int i = winsArray.length - 1;
             switches = 0;
 
             while(i > 0) {
-                if(wins_array[i] > wins_array[i-1]) {
-                    Integer tempInt = wins_array[i];
-                    wins_array[i] = wins_array[i - 1];
-                    wins_array[i - 1] = tempInt;
-                    String tempString = user_names_and_wins[i];
-                    user_names_and_wins[i] = user_names_and_wins[i - 1];
-                    user_names_and_wins[i - 1] = tempString;
+                if(winsArray[i] > winsArray[i-1]) {
+                    Integer tempInt = winsArray[i];
+                    winsArray[i] = winsArray[i - 1];
+                    winsArray[i - 1] = tempInt;
+                    String tempString = userNamesAndWins[i];
+                    userNamesAndWins[i] = userNamesAndWins[i - 1];
+                    userNamesAndWins[i - 1] = tempString;
 
                     switches++;
                 }
@@ -79,18 +75,18 @@ public class ChooseExistingPlayerActivity extends ActionBarActivity {
 
         } while(switches > 0);
 
-        ListAdapter LA = new UsersAdapter(this, user_names_and_wins);
-        ListView user_names_listView = (ListView) findViewById(R.id.user_names_listView);
-        user_names_listView.setAdapter(LA);
+        ListAdapter LA = new UsersAdapter(this, userNamesAndWins);
+        ListView userNamesListView = (ListView) findViewById(R.id.user_names_listView);
+        userNamesListView.setAdapter(LA);
 
-        user_names_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        userNamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,
                                     View view, int position, long id) {
-                String username_picked = ((String.valueOf(parent.getItemAtPosition(position)).split("\n"))[0]);
+                String usernamePicked = ((String.valueOf(parent.getItemAtPosition(position)).split("\n"))[0]);
                 Intent goingBack = new Intent();
                 goingBack.putExtra("player", player);
-                goingBack.putExtra("username", username_picked);
+                goingBack.putExtra("username", usernamePicked);
                 setResult(RESULT_OK, goingBack);
                 finish();
             }

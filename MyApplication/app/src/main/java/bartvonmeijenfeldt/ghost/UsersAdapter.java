@@ -1,8 +1,6 @@
 package bartvonmeijenfeldt.ghost;
 
-/**
- * Created by startklaar on 13-5-2015.
- */
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 
-
-        // We can create custom adapters
-
 class UsersAdapter extends ArrayAdapter<String> {
     public UsersAdapter(Context context,  String[] user_scores){
         super(context, R.layout.adapter_users, user_scores);
     }
-            // Override getView which is responsible for creating the rows for our list
-            // position represents the index we are in for the array.
-            // convertView is a reference to the previous view that is available for reuse. As
-            // the user scrolls the information is populated as needed to conserve memory.
-            // A ViewGroup are invisible containers that hold a bunch of views and
-            // define their layout properties.
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

@@ -73,7 +73,7 @@
         android:layout_marginLeft="15dp"
         android:text="Ok"
         android:id="@+id/ok_button"
-        android:onClick="click"
+        android:onClick="ok"
         android:background="#ff90a8ff" />
 
     </LinearLayout>

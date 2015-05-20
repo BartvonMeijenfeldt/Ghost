@@ -96,7 +96,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#ff90a8ff"
-        android:onClick="Start"/>
+        android:onClick="start"/>
 
 
 
@@ -115,23 +115,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="English"
+        android:tag="0"
         android:layout_margin="3dp"
         android:layout_marginLeft="0dp"
         android:id="@+id/english_radioButton"
         android:layout_below="@+id/language_textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="englishClick"/>
+        android:onClick="clickForLanguage"/>
 
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dutch"
+        android:tag="1"
         android:id="@+id/dutch_radioButton"
         android:layout_margin="3dp"
         android:layout_below="@id/language_textView"
         android:layout_toRightOf="@+id/english_radioButton"
-        android:onClick="dutchClick"
+        android:onClick="clickForLanguage"
         />
 
     <TextView
@@ -149,41 +151,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
+        android:tag="0"
         android:id="@+id/zero_radioButton"
         android:layout_alignTop="@+id/dutch_radioButton"
         android:layout_alignLeft="@+id/random_letter_textView"
         android:layout_alignStart="@+id/random_letter_textView"
-        android:onClick="zeroClick"/>
+        android:onClick="clickForLetter"/>
 
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1"
+        android:tag="1"
         android:id="@+id/one_radioButton"
         android:layout_alignTop="@+id/zero_radioButton"
         android:layout_toRightOf="@+id/zero_radioButton"
         android:layout_toEndOf="@+id/zero_radioButton"
-        android:onClick="oneClick"/>
+        android:onClick="clickForLetter"/>
 
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2"
+        android:tag="2"
         android:id="@+id/two_radioButton"
         android:layout_alignTop="@+id/one_radioButton"
         android:layout_toRightOf="@+id/one_radioButton"
         android:layout_toEndOf="@+id/one_radioButton"
-        android:onClick="twoClick"/>
+        android:onClick="clickForLetter"/>
 
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3"
+        android:tag="3"
         android:id="@+id/three_radioButton"
         android:layout_alignTop="@+id/two_radioButton"
         android:layout_alignRight="@+id/random_letter_textView"
         android:layout_alignEnd="@+id/random_letter_textView"
-        android:onClick="threeClick"/>
+        android:onClick="clickForLetter"/>
 
 
 </RelativeLayout>

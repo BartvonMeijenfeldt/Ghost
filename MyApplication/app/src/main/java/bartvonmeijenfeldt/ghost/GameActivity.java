@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.io.BufferedReader;
@@ -24,8 +25,6 @@ import android.widget.Toast;
 
 public class GameActivity extends ActionBarActivity {
 
-    String name_player1;
-    String name_player2;
     private TextView outputTextView;
     private TextView dictionaryTextView;
     private TextView turnTextView;
@@ -33,10 +32,6 @@ public class GameActivity extends ActionBarActivity {
     Game game;
     SharedPreferences preferenceSettings;
     SharedPreferences.Editor preferenceEditor;
-    Boolean dutch;
-    Set<String> user_names = new HashSet<>();
-    String winner;
-    String loser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +46,6 @@ public class GameActivity extends ActionBarActivity {
         letterEditText = (EditText) findViewById(R.id.letter_editText);
 
         readDictionaryAndCreateGame();
-        getPlayerNames();
         String word = preferenceSettings.getString("word", null);
         if (word != null) {
             recreateSavedGame(word);
@@ -61,33 +55,28 @@ public class GameActivity extends ActionBarActivity {
         setTextViewsOnCreate();
     }
 
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_game, menu);
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.change_language) {
-            dutch = !dutch;
+            boolean dutch = !preferenceSettings.getBoolean("dutch", false);
             preferenceEditor.putBoolean("dutch", dutch);
             preferenceEditor.commit();
         }
 
-        Intent restart_game_activity = new Intent(this, GameActivity.class);
-        restart_game_activity.putExtra("player1", name_player1);
-        restart_game_activity.putExtra("player2", name_player2);
-        startActivity(restart_game_activity);
+        Intent restartGameActivity = new Intent(this, GameActivity.class);
+        restartGameActivity.putExtra("player1", player1());
+        restartGameActivity.putExtra("player2", player2());
+        startActivity(restartGameActivity);
         finish();
         return super.onOptionsItemSelected(item);
     }
-
 
     public void ok(View view) {
 
@@ -99,14 +88,73 @@ public class GameActivity extends ActionBarActivity {
         updateGame(input.charAt(0));
 
         if (game.ended()) {
-            getUserNames();
-            setWinnerAndLoser();
-            updateScoreWinner();
-            createGameEndedActivity();
+            gameEnded();
         }
         else {
             updateViews();
         }
+    }
+
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(!game.ended()) {
+            preferenceEditor.putString("word", game.word);
+            preferenceEditor.putString("player1", player1());
+            preferenceEditor.putString("player2", player2());
+            preferenceEditor.commit();
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+    }
+
+    public void activityHiScores(View view) {
+        Intent hiScores = new Intent(this, HiScoreActivity.class);
+        startActivity(hiScores);
+        finish();
+    }
+
+    public void rematch(View view) {
+        setContentView(R.layout.activity_game);
+
+        outputTextView = (TextView) findViewById(R.id.word_textView);
+        dictionaryTextView = (TextView) findViewById(R.id.dictionary_textView);
+        turnTextView = (TextView) findViewById(R.id.turn_textView);
+        letterEditText = (EditText) findViewById(R.id.letter_editText);
+
+        game.resetGame();
+        pickRandomLetters();
+        setTextViewsOnCreate();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(letterEditText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void gameEnded() {
+        updateScoreWinner();
+        setGameEndedView();
+    }
+
+    public String player1() {
+        Intent players = getIntent();
+        return players.getExtras().getString("player1");
+    }
+
+    public String player2() {
+        Intent players = getIntent();
+        return players.getExtras().getString("player2");
+    }
+
+    private void recreateSavedGame(String word) {
+        for(int i = 0; i < word.length(); i++) {
+            game.guess(word.charAt(i));
+        }
+        preferenceEditor.remove("word");
+        preferenceEditor.commit();
     }
 
     private void updateViews() {
@@ -115,67 +163,86 @@ public class GameActivity extends ActionBarActivity {
         letterEditText.setText("");
 
         if (!game.turn()) {
-            turnTextView.setText(name_player1 + ", choose a letter!");
+            turnTextView.setText(player1() + ", choose a letter!");
         } else {
-            turnTextView.setText(name_player2 + ", choose a letter!");
+            turnTextView.setText(player2() + ", choose a letter!");
         }
     }
 
-    private void createGameEndedActivity() {
-        Intent GameEndedActivity = new Intent(this, GameEndedActivity.class);
-        GameEndedActivity.putExtra("winner", winner);
-        GameEndedActivity.putExtra("loser", loser);
-        GameEndedActivity.putExtra("word", capitalizeFirstLetterWord(game.word));
-        GameEndedActivity.putExtra("isWord", game.lossByMadeWord());
-        startActivity(GameEndedActivity);
-        finish();
+    private void setGameEndedView() {
+        setContentView(R.layout.activity_gameended);
+        hideKeyBoard();
+        setTextViewsOnGameEnded();
+    }
+
+    private void setTextViewsOnGameEnded() {
+        TextView winnerTextView = (TextView) findViewById(R.id.winner_textView);
+        TextView reasonTextView = (TextView) findViewById(R.id.reason_textView);
+        TextView wordTextView = (TextView)findViewById(R.id.word_textView);
+
+        winnerTextView.setText(winner() + " won!");
+        if (game.lossByMadeWord()) {
+            reasonTextView.setText(loser() + " made an existing word:");
+        }   else {
+            reasonTextView.setText(loser() + " added a letter which could never form an existing word:");
+        }
+        wordTextView.setText(capitalizeFirstLetterWord(game.word));
+    }
+
+    private void hideKeyBoard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(letterEditText.getWindowToken(), 0);
     }
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void updateScoreWinner() {
 
-        Set<String> user_names_returning = new HashSet<>();
-        Iterator user_names_iterator = user_names.iterator();
+        Set<String> userNamesReturning = new HashSet<>();
+        Iterator userNamesIterator = userNames().iterator();
 
-        while(user_names_iterator.hasNext()) {
-            String tempEntry = (String) user_names_iterator.next();
-
+        while(userNamesIterator.hasNext()) {
+            String tempEntry = (String) userNamesIterator.next();
             String tempUserName = (tempEntry).split("\n")[0];
-            if(tempUserName.equals(winner)) {
+            if(tempUserName.equals(winner())) {
                 Integer tempScore = Integer.parseInt(tempEntry.split("\n")[1]) + 1;
-                user_names_returning.add(tempUserName +"\n" + tempScore);
+                userNamesReturning.add(tempUserName + "\n" + tempScore);
             }   else {
-                user_names_returning.add(tempEntry);
+                userNamesReturning.add(tempEntry);
             }
         }
 
-        preferenceEditor.putStringSet("names", user_names_returning);
+        preferenceEditor.putStringSet("names", userNamesReturning);
         preferenceEditor.commit();
     }
 
-
-    private void setWinnerAndLoser() {
+    private String winner() {
         if (!game.winner()) {
-            winner = name_player1;
-            loser = name_player2;
-
+            return player1();
         } else {
-            winner = name_player2;
-            loser = name_player1;
+            return player2();
+        }
+    }
+
+    private String loser() {
+        if (game.winner()) {
+            return player1();
+        } else {
+            return player2();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void getUserNames() {
-        user_names = preferenceSettings.getStringSet("names", user_names);
+    private Set userNames() {
+        Set<String> user_names = new HashSet<>();
+        return preferenceSettings.getStringSet("names", user_names);
     }
 
     private void setTextViewsOnCreate() {
         if (!game.turn()) {
-            turnTextView.setText(name_player1 + ", choose a letter!");
+            turnTextView.setText(player1() + ", choose a letter!");
         } else {
-            turnTextView.setText(name_player2 + ", choose a letter!");
+            turnTextView.setText(player2() + ", choose a letter!");
         }
         String word = game.word;
         if (!word.equals("")) {
@@ -197,22 +264,28 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private void readDictionaryAndCreateGame() {
-        BufferedReader reader;
-        dutch = preferenceSettings.getBoolean("dutch", false);
-        if (dutch) {
-            dictionaryTextView.setText("Dutch dictionary in use");
-            reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.dutch)));
-        }   else {
-            reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.english)));
-        }
-        String line;
-        Dictionary dict = new Dictionary();
-        try {
-            while ((line = reader.readLine()) != null) {
-                dict.add(line);
+        Dictionary dict;
+        if(getIntent().hasExtra("dictionary")) {
+            dict = (Dictionary) getIntent().getSerializableExtra("dictionary");
+        } else {
+            BufferedReader reader;
+            boolean dutch = preferenceSettings.getBoolean("dutch", false);
+            if (dutch) {
+                dictionaryTextView.setText("Dutch dictionary in use");
+                reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.dutch)));
+            } else {
+                reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.english)));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            String line;
+
+            dict = new Dictionary();
+            try {
+                while ((line = reader.readLine()) != null) {
+                    dict.add(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         game = new Game(dict);
     }
@@ -228,7 +301,6 @@ public class GameActivity extends ActionBarActivity {
         }
 
         char letter = input.charAt(0);
-
         if (!Character.isLetter(letter)) {
             Toast.makeText(this, "You did not enter a letter", Toast.LENGTH_SHORT).show();
             return true;
@@ -236,34 +308,6 @@ public class GameActivity extends ActionBarActivity {
         return false;
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        preferenceEditor.putString("word", game.word);
-        preferenceEditor.putString("player1", name_player1);
-        preferenceEditor.putString("player2", name_player2);
-        preferenceEditor.commit();
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-    }
-
-
-    public void getPlayerNames() {
-        Intent players = getIntent();
-        name_player1 = players.getExtras().getString("player1");
-        name_player2 = players.getExtras().getString("player2");
-
-    }
-
-    private void recreateSavedGame(String word) {
-        for(int i = 0; i < word.length(); i++) {
-            game.guess(word.charAt(i));
-        }
-        preferenceEditor.remove("word");
-        preferenceEditor.commit();
-    }
 }
 
 

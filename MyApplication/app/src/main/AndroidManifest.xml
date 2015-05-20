@@ -20,7 +20,7 @@
         <activity
             android:name=".GameActivity"
             android:label="Ghost"
-            android:windowSoftInputMode="stateVisible">
+            android:windowSoftInputMode="stateAlwaysVisible" >>
 
         </activity>
 
@@ -35,12 +35,6 @@
             android:label="Ghost" >
 
          </activity>
-
-        <activity
-            android:name=".GameEndedActivity"
-            android:label="Ghost" >
-
-            </activity>
 
         <activity
             android:name=".HiScoreActivity"

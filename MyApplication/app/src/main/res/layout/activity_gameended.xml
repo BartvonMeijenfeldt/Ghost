@@ -53,7 +53,7 @@
         android:layout_alignStart="@+id/rematch_button"
         android:layout_alignRight="@+id/rematch_button"
         android:layout_alignEnd="@+id/rematch_button"
-        android:onClick="activity_hi_scores"/>
+        android:onClick="activityHiScores"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -67,6 +67,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
-        android:onClick="activity_rematch"/>
+        android:onClick="rematch"/>
 
 </RelativeLayout>

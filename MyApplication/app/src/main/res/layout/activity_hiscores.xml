@@ -71,6 +71,6 @@
         android:layout_alignLeft="@+id/player_textView"
         android:layout_alignStart="@+id/player_textView"
         android:background="#ff90a8ff"
-        android:onClick="activity_main"/>
+        android:onClick="activityMain"/>
 
 </RelativeLayout>

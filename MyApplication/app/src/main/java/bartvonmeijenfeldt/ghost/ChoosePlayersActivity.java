@@ -1,33 +1,26 @@
 package bartvonmeijenfeldt.ghost;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-
-/**
- * Created by startklaar on 30-4-2015.
- */
 public class ChoosePlayersActivity extends ActionBarActivity {
 
     EditText player1EditText;
     EditText player2EditText;
-    RadioButton english_radioButton;
-    RadioButton dutch_radioButton;
-    RadioButton zero_radioButton;
-    RadioButton one_radioButton;
-    RadioButton two_radioButton;
-    RadioButton three_radioButton;
     SharedPreferences preferenceSettings;
     SharedPreferences.Editor preferenceEditor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,75 +28,116 @@ public class ChoosePlayersActivity extends ActionBarActivity {
         setContentView(R.layout.activity_chooseplayers);
         player1EditText = (EditText) findViewById(R.id.player1_editText);
         player2EditText = (EditText) findViewById(R.id.player2_editText);
-        english_radioButton = (RadioButton) findViewById(R.id.english_radioButton);
-        dutch_radioButton = (RadioButton) findViewById(R.id.dutch_radioButton);
-        zero_radioButton = (RadioButton) findViewById(R.id.zero_radioButton);
-        one_radioButton = (RadioButton) findViewById(R.id.one_radioButton);
-        two_radioButton = (RadioButton) findViewById(R.id.two_radioButton);
-        three_radioButton = (RadioButton) findViewById(R.id.three_radioButton);
-
-        preferenceSettings = getSharedPreferences("user_names", Context.MODE_PRIVATE);
+        preferenceSettings = getSharedPreferences("userNames", Context.MODE_PRIVATE);
         preferenceEditor = preferenceSettings.edit();
 
-        Boolean dutch_chosen = preferenceSettings.getBoolean("dutch", false);
-        if(dutch_chosen) {
-            dutch_radioButton.setChecked(true);
+        Boolean dutchChosen = preferenceSettings.getBoolean("dutch", false);
+        if(dutchChosen) {
+            setRadioButtonsLanguages(1);
         } else {
-            english_radioButton.setChecked(true);
+            setRadioButtonsLanguages(0);
         }
 
-        Integer letters = preferenceSettings.getInt("letters", 0);
-        switch (letters) {
-            case 0:
-                zero_radioButton.setChecked(true);
-                break;
-            case 1:
-                one_radioButton.setChecked(true);
-                break;
-            case 2:
-                two_radioButton.setChecked(true);
-                break;
-            case 3:
-                three_radioButton.setChecked(true);
-                break;
-        }
-
+        Integer numberOfLetters = preferenceSettings.getInt("numberOfLetters", 0);
+        setRadioButtonsLetters(numberOfLetters);
     }
 
 
-    public void Start(View view) {
+    public void start(View view) {
+        String userName1 = String.valueOf(player1EditText.getText());
+        String userName2 = String.valueOf(player2EditText.getText());
 
+        if(!(userNameLengthCheck(userName1, "Player 1")) || !(userNameLengthCheck(userName2, "Player 2"))) {
+            return;
+        }
+        if (!userNamesDiffer(userName1, userName2)) {
+            return;
+        }
+
+        Set<String> userNames = new HashSet<>();
+        userNames = getUserNames(userNames);
+        String namePlayer1 = String.valueOf(player1EditText.getText());
+        String namePlayer2 = String.valueOf(player2EditText.getText());
+
+        if(userNames.size() == 0) {
+            updateEmptyUserNames(namePlayer1, namePlayer2);
+        }   else {
+            updateExistingUserNames(userNames, namePlayer1, namePlayer2);
+        }
+        startGame(userName1, userName2);
+    }
+
+    private void startGame(String userName1, String userName2) {
         Intent StartGame = new Intent(this,
                 GameActivity.class);
-
-        String user_name_1 = String.valueOf(player1EditText.getText());
-        String user_name_2 = String.valueOf(player2EditText.getText());
-
-        if (user_name_1.equals("") ) {
-            Toast.makeText(this, "Player 1 needs a name", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (user_name_1.length() > 10) {
-            Toast.makeText(this, "Player 1's name is too long, max length is 10 characters", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (user_name_2.equals("")) {
-            Toast.makeText(this, "Player 2 needs a name", Toast.LENGTH_SHORT).show();
-            return;
-        }   else if (user_name_2.length() > 10) {
-            Toast.makeText(this, "Player 2's name is too long, max length is 10 characters", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (user_name_1.equals(user_name_2)) {
-            Toast.makeText(this, "Player 1 and Player 2 need different names", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        StartGame.putExtra("player1", String.valueOf(player1EditText.getText()));
-        StartGame.putExtra("player2", String.valueOf(player2EditText.getText()));
+        StartGame.putExtra("player1", userName1);
+        StartGame.putExtra("player2", userName2);
         startActivity(StartGame);
+        finish();
     }
 
+    private boolean userNamesDiffer(String userName1, String userName2) {
+        if (userName1.equals(userName2)) {
+            Toast.makeText(this, "Player 1 and Player 2 need different names", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean userNameLengthCheck(String userName, String player) {
+        if (userName.equals("") ) {
+            Toast.makeText(this, player + " needs a name", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (userName.length() > 10) {
+            Toast.makeText(this, player + "'s name is too long, max length is 10 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private Set getUserNames(Set<String> userNames) {
+        return preferenceSettings.getStringSet("names", userNames);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void updateEmptyUserNames(String namePlayer1, String namePlayer2) {
+
+        Set<String> userNamesReturning = new HashSet<>();
+        userNamesReturning.add(namePlayer1 + "\n0");
+        userNamesReturning.add(namePlayer2 + "\n0");
+        preferenceEditor.putStringSet("names", userNamesReturning);
+        preferenceEditor.commit();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void updateExistingUserNames(Set userNames, String namePlayer1, String namePlayer2) {
+        Set<String> userNamesReturning = new HashSet<>();
+        Iterator userNamesIterator = userNames.iterator();
+
+        boolean existPlayer1 = false;
+        boolean existPlayer2 = false;
+
+        while(userNamesIterator.hasNext()) {
+            String tempEntry = (String) userNamesIterator.next();
+            userNamesReturning.add(tempEntry);
+            String tempUserName = (tempEntry).split("\n")[0];
+            if(tempUserName.equals(namePlayer1)) {
+                existPlayer1 = true;
+            }   else if(tempUserName.equals(namePlayer2)) {
+                existPlayer2 = true;
+            }
+        }
+        if (!existPlayer1) {
+                userNamesReturning.add(String.valueOf(player1EditText.getText()) + "\n1");
+        }
+        if(!existPlayer2) {
+                userNamesReturning.add(namePlayer2 + "\n0");
+        }
+        preferenceEditor.putStringSet("names", userNamesReturning);
+        preferenceEditor.commit();
+    }
 
 
     public void ExistingPlayers(View view) {
@@ -137,50 +171,53 @@ public class ChoosePlayersActivity extends ActionBarActivity {
 
     }
 
-    public void englishClick(View view) {
-        dutch_radioButton.setChecked(false);
-        preferenceEditor.putBoolean("dutch", false);
-        preferenceEditor.commit();
-    }
-
-    public void dutchClick(View view) {
-        english_radioButton.setChecked(false);
+    public void clickForLanguage(View view){
+        int clicked = Integer.parseInt(view.getTag().toString());
+        setRadioButtonsLanguages(clicked);
+        if (clicked == 1) {
         preferenceEditor.putBoolean("dutch", true);
+        } else {
+            preferenceEditor.putBoolean("dutch", false);
+        }
         preferenceEditor.commit();
     }
 
+    private void setRadioButtonsLanguages(int clicked) {
+        RadioButton[] radioButtons = new RadioButton[2];
+        radioButtons[0] = (RadioButton) findViewById(R.id.english_radioButton);
+        radioButtons[1] = (RadioButton) findViewById(R.id.dutch_radioButton);
 
-
-    public void zeroClick(View view) {
-        one_radioButton.setChecked(false);
-        two_radioButton.setChecked(false);
-        three_radioButton.setChecked(false);
-        preferenceEditor.putInt("letters", 0);
-        preferenceEditor.commit();
-
+        for (int i = 0; i < radioButtons.length; i++){
+            if (i == clicked) {
+                radioButtons[i].setChecked(true);
+            }   else {
+                radioButtons[i].setChecked(false);
+            }
+        }
     }
 
-    public void oneClick(View view) {
-        zero_radioButton.setChecked(false);
-        two_radioButton.setChecked(false);
-        three_radioButton.setChecked(false);
-        preferenceEditor.putInt("letters", 1);
-        preferenceEditor.commit();
-    }
-
-    public void twoClick(View view) {
-        zero_radioButton.setChecked(false);
-        one_radioButton.setChecked(false);
-        three_radioButton.setChecked(false);
-        preferenceEditor.putInt("letters", 2);
+    public void clickForLetter(View view) {
+        int clicked = Integer.parseInt(view.getTag().toString());
+        setRadioButtonsLetters(clicked);
+        preferenceEditor.putInt("numberOfLetters", clicked);
         preferenceEditor.commit();
     }
 
-    public void threeClick(View view) {
-        zero_radioButton.setChecked(false);
-        one_radioButton.setChecked(false);
-        two_radioButton.setChecked(false);
-        preferenceEditor.putInt("letters", 3);
-        preferenceEditor.commit();
+    private void setRadioButtonsLetters(int clicked) {
+
+        RadioButton[] radioButtons = new RadioButton[4];
+        radioButtons[0] = (RadioButton) findViewById(R.id.zero_radioButton);
+        radioButtons[1] = (RadioButton) findViewById(R.id.one_radioButton);
+        radioButtons[2] = (RadioButton) findViewById(R.id.two_radioButton);
+        radioButtons[3] = (RadioButton) findViewById(R.id.three_radioButton);
+
+        for (int i = 0; i < radioButtons.length; i++){
+            if (i == clicked) {
+                radioButtons[i].setChecked(true);
+                }   else {
+                radioButtons[i].setChecked(false);
+            }
+        }
     }
+
 }
