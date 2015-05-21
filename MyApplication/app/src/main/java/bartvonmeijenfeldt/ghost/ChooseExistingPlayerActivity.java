@@ -12,17 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.util.HashSet;
+import android.widget.Toast;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class ChooseExistingPlayerActivity extends ActionBarActivity {
-
-    String player;
-    TextView playerTextView;
-    SharedPreferences preferenceSettings;
-    SharedPreferences.Editor preferenceEditor;
-
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -30,52 +26,17 @@ public class ChooseExistingPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chooseexistingplayer);
 
-        playerTextView = (TextView) findViewById(R.id.player_textView);
-        player = getIntent().getExtras().getString("player");
-        playerTextView.append(player);
+        TextView playerTextView = (TextView) findViewById(R.id.player_textView);
+        playerTextView.append(player());
 
-        Set<String> userNames;
-        Set<String> errorUserNames = new HashSet<>();
-        errorUserNames.add("No Existing\n0");
-        errorUserNames.add("Players\n0");
+        List<Player> players = PlayerFunctions.players(userNames());
+        Collections.sort(players);
+        Collections.reverse(players);
+        inflateMenu(players);
+    }
 
-        preferenceSettings = getSharedPreferences("userNames", Context.MODE_PRIVATE);
-        userNames = preferenceSettings.getStringSet("names", errorUserNames);
-        String[] userNamesAndWins = new String[userNames.size()];
-        userNames.toArray(userNamesAndWins);
-        Integer[] winsArray = new Integer[userNamesAndWins.length];
-
-        for (int i = 0; i < userNamesAndWins.length; i++)
-        {
-            try {
-                winsArray[i] = Integer.parseInt((userNamesAndWins[i]).split("\n")[1]);
-            }   catch (NumberFormatException nfe) {
-                winsArray[i] = 0;
-            }
-        }
-
-        int switches;
-        do {
-            int i = winsArray.length - 1;
-            switches = 0;
-
-            while(i > 0) {
-                if(winsArray[i] > winsArray[i-1]) {
-                    Integer tempInt = winsArray[i];
-                    winsArray[i] = winsArray[i - 1];
-                    winsArray[i - 1] = tempInt;
-                    String tempString = userNamesAndWins[i];
-                    userNamesAndWins[i] = userNamesAndWins[i - 1];
-                    userNamesAndWins[i - 1] = tempString;
-
-                    switches++;
-                }
-                i--;
-            }
-
-        } while(switches > 0);
-
-        ListAdapter LA = new UsersAdapter(this, userNamesAndWins);
+    private void inflateMenu( List<Player> players) {
+        ListAdapter LA = new UsersAdapter(this, PlayerFunctions.userNamesAndWins(players));
         ListView userNamesListView = (ListView) findViewById(R.id.user_names_listView);
         userNamesListView.setAdapter(LA);
 
@@ -85,16 +46,29 @@ public class ChooseExistingPlayerActivity extends ActionBarActivity {
                                     View view, int position, long id) {
                 String usernamePicked = ((String.valueOf(parent.getItemAtPosition(position)).split("\n"))[0]);
                 Intent goingBack = new Intent();
-                goingBack.putExtra("player", player);
+                goingBack.putExtra("player", player());
                 goingBack.putExtra("username", usernamePicked);
                 setResult(RESULT_OK, goingBack);
                 finish();
             }
         });
     }
-    public void ResetPlayers(View view) {
-        preferenceEditor = preferenceSettings.edit();
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private Set<String> userNames() {
+        SharedPreferences preferenceSettings = getSharedPreferences("userNames", Context.MODE_PRIVATE);
+        return preferenceSettings.getStringSet("names", PlayerFunctions.errorUserNames());
+    }
+
+    private String player() {
+        return getIntent().getExtras().getString("player");
+    }
+
+    public void deletePlayers(View view) {
+        SharedPreferences.Editor preferenceEditor = getSharedPreferences("userNames", Context.MODE_PRIVATE).edit();
         preferenceEditor.remove("names");
         preferenceEditor.commit();
+        Toast.makeText(this, "Player names deleted", Toast.LENGTH_SHORT).show();
+        onBackPressed();
     }
 }
