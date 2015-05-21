@@ -1,12 +1,15 @@
 package bartvonmeijenfeldt.ghost;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.String;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import android.widget.Toast;
 
@@ -29,9 +32,9 @@ public class GameActivity extends ActionBarActivity {
     private TextView dictionaryTextView;
     private TextView turnTextView;
     private EditText letterEditText;
-    Game game;
-    SharedPreferences preferenceSettings;
-    SharedPreferences.Editor preferenceEditor;
+    private Game game;
+    private SharedPreferences preferenceSettings;
+    private SharedPreferences.Editor preferenceEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +112,27 @@ public class GameActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && !game.ended()) {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Exit game")
+                    .setMessage("Do you want to quit the current game?")
+                    .setNegativeButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GameActivity.this.finish();
+                        }
+                    })
+                    .setPositiveButton("no", null)
+                    .show();
+            return true;
+        }
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
+
 
     public void activityHiScores(View view) {
         Intent hiScores = new Intent(this, HiScoreActivity.class);
@@ -194,24 +216,18 @@ public class GameActivity extends ActionBarActivity {
         imm.hideSoftInputFromWindow(letterEditText.getWindowToken(), 0);
     }
 
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void updateScoreWinner() {
 
-        Set<String> userNamesReturning = new HashSet<>();
-        Iterator userNamesIterator = userNames().iterator();
-
-        while(userNamesIterator.hasNext()) {
-            String tempEntry = (String) userNamesIterator.next();
-            String tempUserName = (tempEntry).split("\n")[0];
-            if(tempUserName.equals(winner())) {
-                Integer tempScore = Integer.parseInt(tempEntry.split("\n")[1]) + 1;
-                userNamesReturning.add(tempUserName + "\n" + tempScore);
-            }   else {
-                userNamesReturning.add(tempEntry);
+        List<Player> players = PlayerFunctions.players(userNames());
+        for(Player player : players) {
+            if(winner().equals(player.getName())) {
+                player.incrementScoreOne();
+                break;
             }
         }
 
+        Set<String> userNamesReturning = PlayerFunctions.playersToHashSet(players);
         preferenceEditor.putStringSet("names", userNamesReturning);
         preferenceEditor.commit();
     }
