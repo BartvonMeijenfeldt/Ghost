@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class ChoosePlayersActivity extends ActionBarActivity {
@@ -42,7 +42,6 @@ public class ChoosePlayersActivity extends ActionBarActivity {
         setRadioButtonsLetters(numberOfLetters);
     }
 
-
     public void start(View view) {
         String userName1 = String.valueOf(player1EditText.getText());
         String userName2 = String.valueOf(player2EditText.getText());
@@ -54,15 +53,15 @@ public class ChoosePlayersActivity extends ActionBarActivity {
             return;
         }
 
-        Set<String> userNames = new HashSet<>();
-        userNames = getUserNames(userNames);
+        Set<String> userNamesAndScores = new HashSet<>();
+        userNamesAndScores = getUserNames(userNamesAndScores);
         String namePlayer1 = String.valueOf(player1EditText.getText());
         String namePlayer2 = String.valueOf(player2EditText.getText());
 
-        if(userNames.size() == 0) {
+        if(userNamesAndScores.size() == 0) {
             updateEmptyUserNames(namePlayer1, namePlayer2);
         }   else {
-            updateExistingUserNames(userNames, namePlayer1, namePlayer2);
+            updateExistingUserNames(userNamesAndScores, namePlayer1, namePlayer2);
         }
         startGame(userName1, userName2);
     }
@@ -89,9 +88,6 @@ public class ChoosePlayersActivity extends ActionBarActivity {
         if (userName.equals("") ) {
             Toast.makeText(this, player + " needs a name", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (userName.length() > 10) {
-            Toast.makeText(this, player + "'s name is too long, max length is 10 characters", Toast.LENGTH_SHORT).show();
-            return false;
         }
         return true;
     }
@@ -112,36 +108,31 @@ public class ChoosePlayersActivity extends ActionBarActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void updateExistingUserNames(Set userNames, String namePlayer1, String namePlayer2) {
-        Set<String> userNamesReturning = new HashSet<>();
-        Iterator userNamesIterator = userNames.iterator();
+    private void updateExistingUserNames(Set userNamesAndScores, String namePlayer1, String namePlayer2) {
+        List<Player> players = PlayerFunctions.players(userNamesAndScores);
+        List<String> userNames = PlayerFunctions.getUserNamesOfPlayers(players);
 
-        boolean existPlayer1 = false;
-        boolean existPlayer2 = false;
+        if(!userNames.contains(namePlayer1)){
+            players.add(new Player(namePlayer1, 0));
+        }
+        if(!userNames.contains(namePlayer2)) {
+            players.add(new Player(namePlayer2, 0));
+        }
 
-        while(userNamesIterator.hasNext()) {
-            String tempEntry = (String) userNamesIterator.next();
-            userNamesReturning.add(tempEntry);
-            String tempUserName = (tempEntry).split("\n")[0];
-            if(tempUserName.equals(namePlayer1)) {
-                existPlayer1 = true;
-            }   else if(tempUserName.equals(namePlayer2)) {
-                existPlayer2 = true;
-            }
-        }
-        if (!existPlayer1) {
-                userNamesReturning.add(String.valueOf(player1EditText.getText()) + "\n1");
-        }
-        if(!existPlayer2) {
-                userNamesReturning.add(namePlayer2 + "\n0");
-        }
-        preferenceEditor.putStringSet("names", userNamesReturning);
+        preferenceEditor.putStringSet("names", PlayerFunctions.playersToHashSet(players));
         preferenceEditor.commit();
     }
 
 
-    public void ExistingPlayers(View view) {
+    public void existingPlayers(View view) {
+        if(!existingUserNames()) {
+            Toast.makeText(this, "No existing players yet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        createChooseExistingPlayersActivity(view);
+    }
 
+    private void createChooseExistingPlayersActivity(View view) {
         Intent getExistingNameScreenIntent = new Intent(this,
                 ChooseExistingPlayerActivity.class);
 
@@ -153,6 +144,7 @@ public class ChoosePlayersActivity extends ActionBarActivity {
         final int result = 1;
         startActivityForResult(getExistingNameScreenIntent, result);
     }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,6 +210,14 @@ public class ChoosePlayersActivity extends ActionBarActivity {
                 radioButtons[i].setChecked(false);
             }
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private boolean existingUserNames() {
+        SharedPreferences preferenceSettings = getSharedPreferences("userNames",Context.MODE_PRIVATE);
+        Set<String> userNames = new HashSet<>();
+        userNames = preferenceSettings.getStringSet("names", userNames);
+        return userNames.size() != 0;
     }
 
 }
