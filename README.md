@@ -28,7 +28,7 @@ Game: In game: ![GitHub Logo](/picsApp/gamePlay.jpg)
 
 Game: Win screen: ![GitHub Logo](/picsApp/gameFinished.jpg)
 
-Hi-score screen: ![GitHub Logo](/Sketches/hiScores.jpg)
+Hi-score screen: ![GitHub Logo](/picsApp/hiScores.jpg)
 
 
 Frameworks:
