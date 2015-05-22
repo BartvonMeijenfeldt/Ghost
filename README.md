@@ -10,7 +10,7 @@ or put a letter which can't make a word loses.
 Features:
 
 -Dutch/English language
--Possibility to start with (zero), one, two, three or four letters chosen randomly 
+-Start with zero, one, two or three letters chosen randomly 
  by the computer (but still possibly forming a word).
 -Player names
 -High scores
@@ -18,28 +18,17 @@ Features:
 Sketches:
 
 Startscreen:
-![GitHub Logo](/Sketches/Start.jpg)
+![GitHub Logo](/picsApp/main.jpg)
 
-After click on play: ![GitHub Logo](/Sketches/ChoosePlayer.jpg)
+After click on play: ![GitHub Logo](/picsApp/choosePlayers.jpg)
 
-After clicking on New player: ![GitHub Logo](/Sketches/CreateAccount.jpg)
+After clicking on Existing player: ![GitHub Logo](/picsApp/chooseExistingPlayers.jpg)
 
-After clicking on Existing player: ![GitHub Logo](/Sketches/Existing players.jpg)
+Game: In game: ![GitHub Logo](/picsApp/game.jpg)
 
-In game: ![GitHub Logo](/Sketches/Game.jpg)
+Game: Win screen: ![GitHub Logo](/picsApp/gameFinished.jpg)
 
-
-
-Menu: ![GitHub Logo](/Sketches/Menu.jpg)
-
-
-Win screen: ![GitHub Logo](/Sketches/Won.jpg)
-
-Hi-score screen after someone won: ![GitHub Logo](/Sketches/Hi-ScoresAfterGame.jpg)
-
-Settings screen: ![GitHub Logo](/Sketches/Settings.jpg)
-
-Hi-score screen (via menu): ![GitHub Logo](/Sketches/Hi-Scores.jpg)
+Hi-score screen: ![GitHub Logo](/Sketches/hiScores.jpg)
 
 
 Frameworks:
