@@ -24,7 +24,7 @@ After click on play: ![GitHub Logo](/picsApp/choosePlayers.jpg)
 
 After clicking on Existing player: ![GitHub Logo](/picsApp/chooseExistingPlayers.jpg)
 
-Game: In game: ![GitHub Logo](/picsApp/game.jpg)
+Game: In game: ![GitHub Logo](/picsApp/gamePlay.jpg)
 
 Game: Win screen: ![GitHub Logo](/picsApp/gameFinished.jpg)
 
