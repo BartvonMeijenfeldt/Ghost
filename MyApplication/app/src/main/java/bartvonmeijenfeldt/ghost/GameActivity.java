@@ -151,9 +151,6 @@ public class GameActivity extends ActionBarActivity {
         game.resetGame();
         pickRandomLetters();
         setTextViewsOnCreate();
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(letterEditText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void gameEnded() {
